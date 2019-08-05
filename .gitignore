@@ -1,3 +1,6 @@
 
 *.egg-info
+.en
+**.py
 
+**/__pycache__/**
