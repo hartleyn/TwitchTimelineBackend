@@ -24,6 +24,11 @@ class TwitchClient:
     self.user_follow_list = []
     self.pagination_cursor = ''
 
+  def reset_user(self):
+    self.user_follow_list_count = 0
+    self.user_follow_list = []
+    self.pagination_cursor = ''
+
   def fetch_token(self):
     url = f'{self.BASE_URL}/oauth2/token?client_id={self.CLIENT_ID}&client_secret={self.CLIENT_SECRET}&grant_type={self.GRANT_TYPE}'
     res = requests.post(url)
@@ -34,12 +39,15 @@ class TwitchClient:
     res = requests.get(url, headers=self.HEADERS)
     return res.json()['data'][0]['id']
 
-  def fetch_user_follow_list(self, user_id):
+  def fetch_user_follow_list(self, user_id, new_user=True):
+    if new_user:
+      self.reset_user()
     url = f'{self.BASE_URL}/users/follows?from_id={user_id}&first=100'
     if self.pagination_cursor != '':
       url = f'{url}&after={self.pagination_cursor}'
     res = requests.get(url, headers=self.HEADERS)
     data = res.json()
+    # Set count to the 'total' response value, on first page only
     if self.pagination_cursor == '':
       self.user_follow_list_count = data['total']
     self.user_follow_list_count -= 100
@@ -50,5 +58,5 @@ class TwitchClient:
       pass
 
     if self.user_follow_list_count > 0:
-      self.fetch_user_follow_list(user_id)
+      self.fetch_user_follow_list(user_id, False)
     return self.user_follow_list

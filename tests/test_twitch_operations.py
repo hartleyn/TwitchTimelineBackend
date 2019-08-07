@@ -10,3 +10,8 @@ def test_fetch_user_follow_list(twitch_client):
   assert len(follow_list) > 0
   if twitch_client.user_follow_list_count > 0:
     assert len(twitch_client.pagination_cursor) > 0
+
+def test_reset_user(twitch_client):
+  twitch_client.fetch_user_follow_list('59156455')
+  twitch_client.reset_user()
+  assert len(twitch_client.user_follow_list) == 0
