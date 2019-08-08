@@ -1,5 +1,9 @@
 from datetime import datetime
-from app.helpers import convert_date_string_to_datetime, calculate_follow_duration
+from app.helpers import (
+  convert_date_string_to_datetime,
+  calculate_follow_duration,
+  convert_days_to_years_months_days,
+)
 
 
 def test_convert_date_string_to_datetime():
@@ -11,3 +15,7 @@ def test_calculate_follow_duration():
   duration = calculate_follow_duration(dt)
   assert type(duration) == str
   assert ':' in duration
+
+def test_convert_days_to_years_months_days():
+  ymd = convert_days_to_years_months_days(1708)
+  assert ymd == (4, 8, 4)
