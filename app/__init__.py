@@ -9,7 +9,7 @@ def create_app():
   Flask app factory function.
   """
   app = Flask(__name__)
-  CORS(app, resources={r'/*': {'origins': 'http://localhost:3000'}})
+  CORS(app, resources={r'/*': {'origins': ['http://localhost:3000', 'https://competent-hugle-41176c.netlify.com']}})
 
   twitch_client = TwitchClient()
 
