@@ -15,6 +15,7 @@ class TwitchClient:
     env.read_env()
 
     self.BASE_URL = 'https://api.twitch.tv/helix'
+    self.AUTH_URL = 'https://id.twitch.tv'
     self.TOKEN = env('TOKEN')
     self.HEADERS = {'Authorization': f'Bearer {self.TOKEN}'}
     self.CLIENT_ID = env('CLIENT_ID')
@@ -30,7 +31,7 @@ class TwitchClient:
     self.pagination_cursor = ''
 
   def fetch_token(self):
-    url = f'{self.BASE_URL}/oauth2/token?client_id={self.CLIENT_ID}&client_secret={self.CLIENT_SECRET}&grant_type={self.GRANT_TYPE}'
+    url = f'{self.AUTH_URL}/oauth2/token?client_id={self.CLIENT_ID}&client_secret={self.CLIENT_SECRET}&grant_type={self.GRANT_TYPE}'
     res = requests.post(url)
     self.TOKEN = res.json()['access_token']
 
