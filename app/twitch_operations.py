@@ -38,11 +38,15 @@ class TwitchClient:
   def fetch_user_id(self, username):
     url = f'{self.BASE_URL}/users?login={username}'
     res = requests.get(url, headers=self.HEADERS)
+    data = res.json()['data']
     # If token is expired, get a new token and try again
     if res.status_code == 401:
       self.fetch_token()
       self.fetch_user_id(username)
-    return res.json()['data'][0]['id']
+    # If no user is found
+    elif len(data) == 0:
+      return False
+    return data[0]['id']
 
   def fetch_user_follow_list(self, user_id, new_user=True):
     if new_user:

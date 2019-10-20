@@ -16,6 +16,10 @@ def create_app():
   @app.route('/timeline/<username>')
   def fetch_twitch_timeline(username):
     user_id = twitch_client.fetch_user_id(username)
+    # Return 404 if username search returns no result
+    if not user_id:
+      res = make_response({'error': 'No user found.'}, 404)
+      return res
     follow_list = twitch_client.fetch_user_follow_list(user_id)
     for user in follow_list:
       user['follow_duration'] = build_follow_duration_string(user['followed_at'])
