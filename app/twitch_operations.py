@@ -44,7 +44,7 @@ class TwitchClient:
       self.fetch_user_id(username)
     data = res.json()['data']
     # If no user is found
-    elif len(data) == 0:
+    if len(data) == 0:
       return False
     return data[0]['id']
 
