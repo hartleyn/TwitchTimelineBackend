@@ -30,6 +30,10 @@ def create_app():
       return res
     follow_list = twitch_client.fetch_user_follow_list(user_id)
     for user in follow_list:
+      try:
+        user['to_name'].encode('ascii')
+      except UnicodeEncodeError:
+        user['to_name'] = twitch_client.replace_non_ascii_username(user)
       user['follow_duration'] = build_follow_duration_string(user['followed_at'])
       user['followed_at'] = convert_date_string_to_datetime(user['followed_at']).__str__()
     # Earliest follow first

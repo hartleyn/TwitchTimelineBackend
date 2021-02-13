@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twitch-timeline-backend
+  labels:
+    app: twitch-timeline-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: twitch-timeline-backend
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: twitch-timeline-backend
+    spec:
+      containers:
+      - name: twitch-timeline-backend
+        image: hartleyn/twitch_timeline_backend:1.0.4
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5001
+        resources: {}
+      restartPolicy: Always
+      # serviceAccountName: ""
+      # volumes: null
+# status: {}
