@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: twitch-timeline-backend
+  labels:
+    app: twitch-timeline-backend
+spec:
+  ports:
+  - port: 80
+    targetPort: 5001
+  selector:
+    app: twitch-timeline-backend
+# status:
+  # loadBalancer: {}
