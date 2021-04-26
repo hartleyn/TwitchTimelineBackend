@@ -1,0 +1,43 @@
+image: hartleyn/twitch_timeline_backend:1.0.4
+
+stages:
+    - test
+    - build
+    - deploy
+
+test:
+    stage: test
+    script:
+        - pip install -r test-requirements.txt
+        - pip install -e .
+        - pytest
+build:
+    image: docker:18.09
+    only:
+        - master
+    services:
+        - docker:18.09-dind     
+    stage: build
+    script:
+        - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+        - docker build -t hartleyn/twitch_timeline_backend:${APP_VERSION} .
+        - docker build -t hartleyn/twitch_timeline_backend:latest .
+        - docker push hartleyn/twitch_timeline_backend:${APP_VERSION}
+        - docker push hartleyn/twitch_timeline_backend:latest
+
+deploy:
+    stage: deploy
+    only:
+        - master
+    image: dtzar/helm-kubectl
+    script:
+        - kubectl config set-cluster k8s --server="${SERVER}"
+        - kubectl config set clusters.k8s.certificate-authority-data ${CERTIFICATE_AUTHORITY_DATA}
+        - kubectl config set-credentials gitlab --token="${USER_TOKEN}"
+        - kubectl config set-context default --cluster=k8s --user=gitlab
+        - kubectl config use-context default
+        - helm upgrade -f deploy/values.yaml lol-bot-brain deploy/
+
+variables:
+    DOCKER_HOST: tcp://localhost:2375
+    APP_VERSION: 1.0.4
